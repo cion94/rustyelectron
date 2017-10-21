@@ -1,25 +1,40 @@
-var fs = require("fs");
 var express = require("express");
+var request = require("request");
 var bodyParser = require("body-parser");
+var app = express();
+var port = process.env.port || 5000;
 
-var app = express()
-
-var port = process.env.PORT || 8000; 
-
-app.use(bodyParser.json())
 app.use(express.static('public'))
-
+app.use(bodyParser.json());
+app.set('view engine', 'ejs');
 
 app.get("/", function(req, res){
-    fs.readFile("private/htmls/index.html", function(err, buff){
-        if(err){
-            console.log(err);
-        }
-        else {
-            res.send(buff.toString());
-        }
-    });
+    res.render("login");
 });
 
-app.listen(port);
+app.get("/index", function(req, res){
+    res.render("index");
+});
+
+app.get("/login", function(req, res){
+    res.render("login");
+});
+
+
+app.post("/login", function(req, res){
+
+});
+
+app.post("/logout", function(req, res){
+    res.render("head");
+});
+
+app.listen(port, function(err){
+    if(err){
+        console.log("[ERR]Could not listen on " + port, err)
+    }
+    else{
+        console.log("Listening on port " + port);
+    }
+});
 
