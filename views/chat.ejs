@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Dashboard with Off-canvas Sidebar</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="css/styles.css" rel="stylesheet">
+
+		<style>
+	      #chat-form { padding: 3px; position: fixed; bottom: 0; width: 70%; 
+	      	padding-left: 40px;
+	      	padding-right: 40px;
+	      }
+	      #chat-form input { border: 2; padding: 10px; width: 90%; margin-right: .5%; }
+	      #chat-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+	      #messages { list-style-type: none; margin: 0; padding: 0; }
+	      #messages li { padding: 5px 10px; }
+	      #messages li:nth-child(odd) { background: #eee; }
+	    </style>
+	</head>
+	<body>
+
+<% include ../partials/navbar %>
+
+<div class="container-fluid">
+      
+      <div class="row row-offcanvas row-offcanvas-left">
+        
+        <% include ../partials/sidebar %>
+         
+        <div class="col-sm-9 col-md-10 main">
+          
+          <!--toggle sidebar button-->
+          <p class="visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><i class="glyphicon glyphicon-chevron-left"></i></button>
+          </p>
+          
+		      <h1 class="page-header">Chat</h1>
+
+          Smarthack | 2017
+
+          <ul id="messages"></ul>
+		    <form id="chat-form" action="">
+		      <input id="m" autocomplete="off" /><button>Send</button>
+		    </form>
+
+		    <script src="/socket.io/socket.io.js"></script>
+			<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+			<script>
+			  $(function () {
+			    var socket = io();
+			    $('form').submit(function(){
+
+			      $('#messages').append($('<li>').text( 'Me : ' + $('#m').val()));
+
+			      socket.emit('chat message', $('#m').val());
+
+			      $('#m').val('');
+			      return false;
+			    });
+			    socket.on('chat message', function(msg){
+			      $('#messages').append($('<li>').text(msg));
+			    });
+			  });
+			</script>
+
+
+          
+      </div><!--/row-->
+	</div>
+</div><!--/.container-->
+
+<% include ../partials/footer.ejs %>
