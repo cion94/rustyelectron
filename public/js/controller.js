@@ -1,4 +1,5 @@
-$('.message a').click(function(){
-    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-});
-
+function register(){
+    $.get( "views/register.ejs", function( data ) {
+        alert( "Load was performed." );
+    });
+}

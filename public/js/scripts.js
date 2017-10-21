@@ -3,3 +3,7 @@ $(document).ready(function() {
     $('.row-offcanvas').toggleClass('active');
   });
 });
+
+$('.message a').click(function(){
+  $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+});
