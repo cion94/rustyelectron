@@ -1,5 +1,6 @@
-function register(){
-    $.get( "views/register.ejs", function( data ) {
+function showSidebar(){
+    $.get( "ajax/test.html", function( data ) {
+        $( ".result" ).html( data );
         alert( "Load was performed." );
     });
 }
