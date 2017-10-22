@@ -4,9 +4,14 @@
           <li><a href="#"><strong>Overview</strong></a></strong></a></li>
       </ul> -->
       <script>
-        function getTasks(id){
+        function getTasks(id, name){
+          document.getElementById("sidebar").innerHTML = "";
+          document.getElementById("sidebar").innerHTML = "<b>" + name + "</b>";
           $.post("/tasksByProject",{id:id},function(data){
-              console.log(data);
+            for(var i=0; i<data.length; i++) {
+              var litem = "<li><button onclick='getTasks("+data[i].id+")'>"+data[i].name+"</button></li>"
+              document.getElementById("sidebar").innerHTML += litem;
+            }
           });
         }
 
@@ -14,8 +19,6 @@
             document.getElementById("sidebar").innerHTML = "";
             document.getElementById("sidebar").innerHTML = "<b>" + name + "</b>";
             $.post("/projectsByTeam", {id:id},function(data){
-              
-              
 
               for(var i=0; i<data.length; i++) {
                 var litem = "<li><button onclick='getTasks("+data[i].id+")'>"+data[i].name+"</button></li>"
