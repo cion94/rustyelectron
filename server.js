@@ -53,6 +53,15 @@ function createDashboard(_cb){
     res.redirect("/index");
 }  
 
+app.post('/createTask',function(req, res){
+    req.body.project_id= parseInt(req.body.project_id);
+    req.body.status = parseInt(req.body.status);
+    req.body.assigned_to = parseInt(req.body.assigned_to);
+    apiPost('/project/'+req.body.project_id+'/task',req.body,function(err,data){
+        res.send(data);
+    }, req.cookies.token);
+});
+
 app.post('/move', function(req, res){
     apiPost('/task/'+req.body.id,{
         assigned_to: parseInt(req.body.assigned_to),

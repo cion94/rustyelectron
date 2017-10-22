@@ -7,7 +7,6 @@
 
         function moveRight(id, status, assigned_to){
           $.post('/move',{id:id, status:status+1, assigned_to:assigned_to},function(data){
-            console.log('aici');
             window.location.replace('/index');
           });
         }
@@ -19,7 +18,6 @@
             document.getElementById("done").innerHTML="<b>Done</b>";
             for(var i=0; i<data.length; i++) { 
                 var status = data[i].status;
-                console.log(data[i]);
                 switch(status){
                   case 1:
                           document.getElementById("todo").innerHTML+="<li class='listElement'><b>"+data[i].name;

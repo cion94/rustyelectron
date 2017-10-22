@@ -1,6 +1,19 @@
 <script>
 
+  function createTask(){
+    var projectId = window.prompt('ProjectId:');
+    projectID = parseInt(projectId);
+    var assignedTo = window.prompt('AssignedTo:');
+    assignedTo = parseInt(assignedTo);
+    status = 1;
+    var name = window.prompt('Name:');
+    name = name.substr(0,20);
+    var description = window.prompt('Description:');
+    description = description.substr(0,20);
 
+    $.post('/createTask',{project_id:projectId, assigned_to:assignedTo, status:status, name:name, description:description},function(data){
+    });
+  }
 
   function logout() {
     var cookies = document.cookie.split(";");
@@ -30,6 +43,7 @@
         <ul class="nav navbar-nav navbar-right">
           <li><a href="index">Dashboard</a></li>
           <li><a href="chat">Chat</a></li>
+          <button onclick ="createTask()">Create Task</button>
           <button onclick = "logout()">Logout</button>
         </ul>
       </div>
