@@ -1,13 +1,37 @@
 <div class="col-sm-3 col-md-2 sidebar-offcanvas" id="sidebar" role="navigation">
     
-      <ul class="nav nav-sidebar">
+      <!-- <ul class="nav nav-sidebar">
           <li><a href="#"><strong>Overview</strong></a></strong></a></li>
-      </ul>
+      </ul> -->
+      <script>
+        function getTasks(id){
+          $.post("/tasksByProject",{id:id},function(data){
+              console.log(data);
+          });
+        }
+
+        function getProjects(id, name){
+            document.getElementById("sidebar").innerHTML = "";
+            document.getElementById("sidebar").innerHTML = "<b>" + name + "</b>";
+            $.post("/projectsByTeam", {id:id},function(data){
+              
+              
+
+              for(var i=0; i<data.length; i++) {
+                var litem = "<li><button onclick='getTasks("+data[i].id+")'>"+data[i].name+"</button></li>"
+                document.getElementById("sidebar").innerHTML += litem;
+              }
+            });
+        }
+      </script>
 
       <ul class="nav nav-sidebar">
       <ul>
           <% for(var i=0; i<teams.length; i++) { %>
-             <li><a href='teams/<%= teams[i] %>'><%= teams[i] %></a></li>
+              
+             <li><button onclick='getProjects(<%= teams[i].id %>, "<%= teams[i].name %>")'><%= teams[i].name %></a></li>
+             
+             <!-- <li><button onclick="getProjects(<% teams[i].id %>, <% teams[i].name %>)"></button></li>  -->
           <% } %>
       </ul>
    
