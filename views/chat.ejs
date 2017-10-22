@@ -72,6 +72,10 @@
 			  $(function () {
 			    var socket = io();
 
+			    var username = document.cookie.split('=')[1];
+
+			    socket.emit('add user', username)
+
 				var private_user = '#global';
 
 			    $('form').submit(function(){
@@ -105,9 +109,9 @@
 			    	for (let key in chat_users)
 			    	{
 			    		if (key != socket.id) {
-				    		$('#chat-users').append($('<li>').text(key).click(function(){
+				    		$('#chat-users').append($('<li>').text(chat_users[key]).click(function(){
 				    			private_user = key;
-				    			$('#messages').append($('<li>').html( '<span class="chat-conv-user"> Starting chat with ' + private_user + '</span>'));
+				    			$('#messages').append($('<li>').html( '<span class="chat-conv-user"> Starting chat with ' + chat_users[private_user] + '</span>'));
 				    			socket.emit('start chat', key);
 				    		}));
 				    		/*$('#chat-users li').click(function(){

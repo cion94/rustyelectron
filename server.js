@@ -159,26 +159,37 @@ const server = app.listen(port, function(err){
 const io = require('socket.io')(server);
 
 var online_users = {
-    '#global': 1
+    '#global': '#General'
 }
 
 io.on('connection', function(socket){
   console.log('a user connected');
   console.log(socket.id)
-  online_users[socket.id] = 1
+  //online_users[socket.id] = 1
 
-  io.emit('update online', JSON.stringify(online_users))
+  io.emit('update online', JSON.stringify(online_users));
+
+  socket.on('add user', function(msg){
+    var buff = Buffer.from(msg, 'base64').toString();
+    var json = buff.split('}')[1];
+    json += '}';
+    data = JSON.parse(json);
+    username = data.user;
+
+    online_users[socket.id] = username;
+    console.log(username)
+  });
 
   socket.on('chat message', function(msg){
     console.log('message: ' + msg);
 
-    socket.broadcast.emit('chat message', {'msg': msg, 'user': socket.id});
+    socket.broadcast.emit('chat message', {'msg': msg, 'user': online_users[socket.id]});
   });
 
   socket.on('send pm', function(payload){
     sid = payload['user']
     msg = payload['msg']
-    socket.to(sid).emit('get pm', {'user': socket.id, 'msg': msg});
+    socket.to(sid).emit('get pm', {'user': online_users[socket.id], 'msg': msg});
   });
 
   socket.on('start chat', function(msg){
