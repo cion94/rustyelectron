@@ -86,7 +86,7 @@ app.post("/tasksByProject",function(req, res){
     if(req.cookies.token){
         id = req.body.id;
         apiGet("/project/"+id+"/tasks", function(err, data){
-            res.send(data.toString());
+            res.send(JSON.parse(data));
         }, req.cookies.token);
     }
     else{

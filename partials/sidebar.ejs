@@ -5,12 +5,23 @@
       </ul> -->
       <script>
         function getTasks(id, name){
-          document.getElementById("sidebar").innerHTML = "";
-          document.getElementById("sidebar").innerHTML = "<b>" + name + "</b>";
           $.post("/tasksByProject",{id:id},function(data){
-            for(var i=0; i<data.length; i++) {
-              var litem = "<li><button onclick='getTasks("+data[i].id+")'>"+data[i].name+"</button></li>"
-              document.getElementById("sidebar").innerHTML += litem;
+            document.getElementById("todo").innerHTML="<b>To Do</b>";
+            document.getElementById("inprogress").innerHTML="<b>In Progress</b>";
+            document.getElementById("done").innerHTML="<b>Done</b>";
+            for(var i=0; i<data.length; i++) { 
+                var status = data[i].status;
+                switch(status){
+                  case 1:
+                          document.getElementById("todo").innerHTML+="<br>"+data[i].name+"<br>";
+                          break;
+                  case 2:
+                          document.getElementById("inprogress").innerHTML+="<br>"+data[i].name+"<br>";  
+                          break;
+                  case 3:
+                          document.getElementById("done").innerHTML+="<br>"+data[i].name+"<br>";    
+                          
+                }
             }
           });
         }
