@@ -54,7 +54,11 @@ function createDashboard(_cb){
 }  
 
 app.get("/", function(req, res){
-    res.render("login");
+    console.log(req.cookies.token)
+    if (req.cookies.token)
+        res.redirect('/index')
+    else
+        res.render("login");
 });
 
 app.get("/index", function(req, res){

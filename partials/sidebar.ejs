@@ -12,14 +12,14 @@
             for(var i=0; i<data.length; i++) { 
                 var status = data[i].status;
                 switch(status){
-                  case 1:
-                          document.getElementById("todo").innerHTML+="<br>"+data[i].name+"<br>";
+                  case 1:''
+                          document.getElementById("todo").innerHTML+="<li class='listElement'>"+data[i].name+"</li>";
                           break;
                   case 2:
-                          document.getElementById("inprogress").innerHTML+="<br>"+data[i].name+"<br>";  
+                          document.getElementById("inprogress").innerHTML+="<li class='listElement'>"+data[i].name+"</li>";  
                           break;
                   case 3:
-                          document.getElementById("done").innerHTML+="<br>"+data[i].name+"<br>";    
+                          document.getElementById("done").innerHTML+="<li class='listElement'>"+data[i].name+"</li>";    
                           
                 }
             }
@@ -28,25 +28,20 @@
 
         function getProjects(id, name){
             document.getElementById("sidebar").innerHTML = "";
-            document.getElementById("sidebar").innerHTML = "<b>" + name + "</b>";
+            document.getElementById("sidebar").innerHTML = "<div class = 'sidebarCategory'>" + name + "</div>";
             $.post("/projectsByTeam", {id:id},function(data){
 
               for(var i=0; i<data.length; i++) {
-                var litem = "<li><button onclick='getTasks("+data[i].id+")'>"+data[i].name+"</button></li>"
+                var litem = "<button class = 'sidebarButton' onclick='getTasks("+data[i].id+")'>"+data[i].name+"</button>"
                 document.getElementById("sidebar").innerHTML += litem;
               }
             });
         }
       </script>
 
-      <ul class="nav nav-sidebar">
-      <ul>
-          <% for(var i=0; i<teams.length; i++) { %>
-              
-             <li><button onclick='getProjects(<%= teams[i].id %>, "<%= teams[i].name %>")'><%= teams[i].name %></a></li>
-             
-             <!-- <li><button onclick="getProjects(<% teams[i].id %>, <% teams[i].name %>)"></button></li>  -->
-          <% } %>
-      </ul>
+        <% for(var i=0; i<teams.length; i++) { %>
+           <button class = 'sidebarButton' onclick='getProjects(<%= teams[i].id %>, "<%= teams[i].name %>")'><%= teams[i].name %></a>
+           <!-- <li><button onclick="getProjects(<% teams[i].id %>, <% teams[i].name %>)"></button></li>  -->
+        <% } %>
    
  </div><!--/span-->
