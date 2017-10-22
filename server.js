@@ -53,8 +53,15 @@ function createDashboard(_cb){
     res.redirect("/index");
 }  
 
+app.post('/move', function(req, res){
+    apiPost('/task/'+req.body.id,{
+        assigned_to: parseInt(req.body.assigned_to),
+        status: parseInt(req.body.status)
+    },function(err, data){
+    },req.cookies.token);
+});
+
 app.get("/", function(req, res){
-    console.log(req.cookies.token)
     if (req.cookies.token)
         res.redirect('/index')
     else

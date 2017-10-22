@@ -4,6 +4,14 @@
           <li><a href="#"><strong>Overview</strong></a></strong></a></li>
       </ul> -->
       <script>
+
+        function moveRight(id, status, assigned_to){
+          $.post('/move',{id:id, status:status+1, assigned_to:assigned_to},function(data){
+            console.log('aici');
+            window.location.replace('/index');
+          });
+        }
+
         function getTasks(id, name){
           $.post("/tasksByProject",{id:id},function(data){
             document.getElementById("todo").innerHTML="<b>To Do</b>";
@@ -11,16 +19,24 @@
             document.getElementById("done").innerHTML="<b>Done</b>";
             for(var i=0; i<data.length; i++) { 
                 var status = data[i].status;
+                console.log(data[i]);
                 switch(status){
-                  case 1:''
-                          document.getElementById("todo").innerHTML+="<li class='listElement'>"+data[i].name+"</li>";
+                  case 1:
+                          document.getElementById("todo").innerHTML+="<li class='listElement'><b>"+data[i].name;
+                          document.getElementById("todo").innerHTML+="</b>"+data[i].description;
+                          document.getElementById("todo").innerHTML+="<button onclick='moveRight("+data[i].id+","+data[i].status+","+data[i].assigned_to+")'>></button>";
+                          document.getElementById("todo").innerHTML+="</li>";
                           break;
                   case 2:
-                          document.getElementById("inprogress").innerHTML+="<li class='listElement'>"+data[i].name+"</li>";  
-                          break;
+                        document.getElementById("inprogress").innerHTML+="<li class='listElement'><b>"+data[i].name;
+                        document.getElementById("inprogress").innerHTML+="</b>"+data[i].description;
+                        document.getElementById("inprogress").innerHTML+="<button onclick='moveRight("+data[i].id+","+data[i].status+","+data[i].assigned_to+")'>></button>";
+                        document.getElementById("inprogress").innerHTML+="</li>";
+                        break;
                   case 3:
-                          document.getElementById("done").innerHTML+="<li class='listElement'>"+data[i].name+"</li>";    
-                          
+                          document.getElementById("done").innerHTML+="<li class='listElement'><b>"+data[i].name;
+                          document.getElementById("done").innerHTML+="</b>"+data[i].description;
+                          document.getElementById("done").innerHTML+="</li>";
                 }
             }
           });
