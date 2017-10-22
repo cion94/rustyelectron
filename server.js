@@ -165,9 +165,9 @@ var online_users = {
 io.on('connection', function(socket){
   console.log('a user connected');
   console.log(socket.id)
-  //online_users[socket.id] = 1
+  // online_users[socket.id] = 1
 
-  io.emit('update online', JSON.stringify(online_users));
+  // io.emit('update online', JSON.stringify(online_users));
 
   socket.on('add user', function(msg){
     var buff = Buffer.from(msg, 'base64').toString();
@@ -177,6 +177,7 @@ io.on('connection', function(socket){
     username = data.user;
 
     online_users[socket.id] = username;
+    io.emit('update online', JSON.stringify(online_users));
     console.log(username)
   });
 
