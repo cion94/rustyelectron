@@ -95,7 +95,17 @@ app.post("/tasksByProject",function(req, res){
 });
 
 app.get("/chat", function(req, res){
-    res.render("chat")
+    if (req.cookies.token){
+        apiGet("/teams",function(err, teams){
+                if(!err){
+                    res.render("chat", {teams : JSON.parse(teams)});
+                }
+            }, req.cookies.token
+        )
+    }
+    else {
+        res.redirect('/');
+    }
 });
 
 app.get("/register", function(req, res){
@@ -148,12 +158,31 @@ const server = app.listen(port, function(err){
 
 const io = require('socket.io')(server);
 
+var online_users = {
+    '#global': 1
+}
+
 io.on('connection', function(socket){
   console.log('a user connected');
+  console.log(socket.id)
+  online_users[socket.id] = 1
+
+  io.emit('update online', JSON.stringify(online_users))
 
   socket.on('chat message', function(msg){
     console.log('message: ' + msg);
-    socket.broadcast.emit('chat message', msg);
+
+    socket.broadcast.emit('chat message', {'msg': msg, 'user': socket.id});
+  });
+
+  socket.on('send pm', function(payload){
+    sid = payload['user']
+    msg = payload['msg']
+    socket.to(sid).emit('get pm', {'user': socket.id, 'msg': msg});
+  });
+
+  socket.on('start chat', function(msg){
+    console.log(msg);
   });
 
   /*socket.on('chat message', function(msg){
@@ -162,7 +191,8 @@ io.on('connection', function(socket){
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
+    delete online_users[socket.id]
+    io.emit('update online', JSON.stringify(online_users))
   });
 
 });
-

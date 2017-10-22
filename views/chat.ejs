@@ -19,9 +19,24 @@
 	      }
 	      #chat-form input { border: 2; padding: 10px; width: 90%; margin-right: .5%; }
 	      #chat-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-	      #messages { list-style-type: none; margin: 0; padding: 0; }
+	      #messages { list-style-type: none; margin: 0; padding: 0; width: 50%; float:left;
+	      		min-height: 20px;
+
+	       }
 	      #messages li { padding: 5px 10px; }
 	      #messages li:nth-child(odd) { background: #eee; }
+
+	      .chat-conv-user {
+	      	color: green;
+	      }
+
+	      #chat-users { list-style-type: none; margin: 0; padding: 0; width: 40%; 
+	      	float: left;
+	      	min-height: 20px;
+
+	      }
+	      #chat-users li { padding: 5px 10px; }
+	      /*#chat-users li:nth-child(odd) { background: #eee; }*/
 	    </style>
 	</head>
 	<body>
@@ -43,9 +58,9 @@
           
 		      <h1 class="page-header">Chat</h1>
 
-          Smarthack | 2017
 
           <ul id="messages"></ul>
+          <ul id="chat-users"></ul>
 		    <form id="chat-form" action="">
 		      <input id="m" autocomplete="off" /><button>Send</button>
 		    </form>
@@ -53,19 +68,53 @@
 		    <script src="/socket.io/socket.io.js"></script>
 			<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 			<script>
+
 			  $(function () {
 			    var socket = io();
+
+				var private_user = '#global';
+
 			    $('form').submit(function(){
 
-			      $('#messages').append($('<li>').text( 'Me : ' + $('#m').val()));
+			      $('#messages').append($('<li>').html( '<span class="chat-conv-user">Me > </span>' + $('#m').val()));
 
-			      socket.emit('chat message', $('#m').val());
+			      if (private_user == '#global') {
+			      		socket.emit('chat message', $('#m').val());
+			  		}
+			  	  else {
+			  	  	socket.emit('send pm', {'user':private_user, 'msg': $('#m').val()});
+			  	  }
 
 			      $('#m').val('');
 			      return false;
 			    });
+
 			    socket.on('chat message', function(msg){
-			      $('#messages').append($('<li>').text(msg));
+
+			      $('#messages').append($('<li>').html('<span class="chat-conv-user">' + msg.user + ' > </span>' + msg.msg));
+			    });
+
+			    socket.on('get pm', function(msg){
+
+			      $('#messages').append($('<li>').html('<span class="chat-conv-user"> Private ' + msg.user + ' > </span>' + msg.msg));
+			    });
+
+			    socket.on('update online', function(msg){
+			    	chat_users = JSON.parse(msg);
+			    	$('#chat-users').empty();
+			    	for (let key in chat_users)
+			    	{
+			    		if (key != socket.id) {
+				    		$('#chat-users').append($('<li>').text(key).click(function(){
+				    			private_user = key;
+				    			$('#messages').append($('<li>').html( '<span class="chat-conv-user"> Starting chat with ' + private_user + '</span>'));
+				    			socket.emit('start chat', key);
+				    		}));
+				    		/*$('#chat-users li').click(function(){
+				    			
+				    		});*/
+			    		}
+			    	}
 			    });
 			  });
 			</script>
